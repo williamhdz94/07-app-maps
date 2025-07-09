@@ -1,14 +1,15 @@
 import { Component, ElementRef, signal, viewChild, AfterViewInit, effect } from '@angular/core';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { environment } from '../../../environments/environment';
 import { IMarker } from '../../Data/interfaces/IMarker';
 import { v4 as UUIDV4 } from 'uuid'
+import { JsonPipe } from '@angular/common';
 
 mapboxgl.accessToken = environment.mapboxkey;
 
 @Component({
   selector: 'app-markers-page',
-  imports: [],
+  imports: [ JsonPipe ],
   templateUrl: './markers-page.component.html',
   styleUrl: './markers-page.component.scss',
 })
@@ -89,6 +90,14 @@ export class MarkersPageComponent implements AfterViewInit {
     // this.markers.set([newMarker, ...this.markers()]);
     this.markers.update((markers) => [newMarker, ...markers]);
 
+  }
+
+  flyToMaker( lngLat: LngLatLike ) {
+    if( !this.map() ) return;
+
+    this.map()?.flyTo({
+      center: lngLat
+    })
   }
 
 }
